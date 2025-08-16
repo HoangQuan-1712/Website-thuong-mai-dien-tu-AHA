@@ -17,11 +17,3 @@ export const WrapperContainerRight = styled.div `
     align-items: center;
     gap: 4px;
 `;
-
-export const WrapperTextAHA = styled.h4 `
-    margin: 0px 0px 5px;
-    color: rgb(10, 104, 255);
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 24px;
-`;

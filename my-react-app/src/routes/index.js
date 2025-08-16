@@ -8,7 +8,7 @@ import SignUpPage from '../pages/SignUpPage/SignUpPage';
 import SignInPageNumberPhone from '../pages/SignInPage/SignInPageNumberPhone';
 import ProductDetailsPage from '../pages/ProductDetailsPage/ProductDetailsPage';
 import PassForPhoneNumber from '../pages/SignUpPage/PassForPhoneNumber';
-import ForgotPassword from '../pages/SignUpPage/ForgotPassword';
+import ForgotPassword from '../pages/SignUpPage/ForgotPassword  ';
 
 export const routes = [{
         path: '/',
