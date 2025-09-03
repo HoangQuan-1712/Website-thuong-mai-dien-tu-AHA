@@ -1,6 +1,8 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const { default: mongoose } = require("mongoose");
+const routes = require("./routes");
+const bodyParser = require("body-parser");
 dotenv.config()
 
 const app = express()
@@ -10,7 +12,13 @@ app.get('/', (req, res) => {
     res.send('Hello World!')
 })
 
-mongoose.connect(`mongodb+srv://muoinhungnhat:${process.env.MONGO_DB}@cluster0.ei52a81.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)
+app.use(bodyParser.json())
+
+routes(app);
+
+
+
+mongoose.connect(`${process.env.MONGO_DB}`)
     .then(() => {
         console.log('Connect DB success')
     })

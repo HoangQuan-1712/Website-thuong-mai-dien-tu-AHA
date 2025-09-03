@@ -8,60 +8,66 @@ import SignUpPage from '../pages/SignUpPage/SignUpPage';
 import SignInPageNumberPhone from '../pages/SignInPage/SignInPageNumberPhone';
 import ProductDetailsPage from '../pages/ProductDetailsPage/ProductDetailsPage';
 import PassForPhoneNumber from '../pages/SignUpPage/PassForPhoneNumber';
-import ForgotPassword from '../pages/SignUpPage/ForgotPassword  ';
+import ForgotPassword from '../pages/SignUpPage/ForgotPassword';
+import Register from '../pages/SignUpPage/Register';
 
 export const routes = [{
-        path: '/',
-        page: HomePage,
-        isShowHeader: true
-    },
-    {
-        path: '/order',
-        page: OrderPage,
-        isShowHeader: true
-    },
-    {
-        path: '/products',
-        page: ProductsPage,
-        isShowHeader: true
-    },
-    {
-        path: '/type',
-        page: TypeProductPage,
-        isShowHeader: true
-    },
-    {
-        path: '/sign-in',
-        page: SignInPage,
-        isShowHeader: false
-    },
-    {
-        path: '/sign-up',
-        page: SignUpPage,
-        isShowHeader: false
-    },
-    {
-        path: '/sign-in-numberphone',
-        page: SignInPageNumberPhone,
-        isShowHeader: false
-    },
-    {
-        path: '/pass-for-phonenumber',
-        page: PassForPhoneNumber,
-        isShowHeader: false
-    },
-    {
-        path: '/forgot-password',
-        page: ForgotPassword,
-        isShowHeader: false
-    },
-    {
-        path: '/product-details',
-        page: ProductDetailsPage,
-        isShowHeader: true
-    },
-    {
-        path: '/*',
-        page: NotFoundPage
-    },
+    path: '/',
+    page: HomePage,
+    isShowHeader: true
+},
+{
+    path: '/order',
+    page: OrderPage,
+    isShowHeader: true
+},
+{
+    path: '/products',
+    page: ProductsPage,
+    isShowHeader: true
+},
+{
+    path: '/type',
+    page: TypeProductPage,
+    isShowHeader: true
+},
+{
+    path: '/sign-in',
+    page: SignInPage,
+    isShowHeader: false
+},
+{
+    path: '/sign-up',
+    page: SignUpPage,
+    isShowHeader: false
+},
+{
+    path: '/sign-in-numberphone',
+    page: SignInPageNumberPhone,
+    isShowHeader: false
+},
+{
+    path: '/pass-for-phonenumber',
+    page: PassForPhoneNumber,
+    isShowHeader: false
+},
+{
+    path: '/forgot-password',
+    page: ForgotPassword,
+    isShowHeader: false
+},
+{
+    path: '/register',
+    page: Register,
+    isShowHeader: false
+},
+{
+    path: '/product-details',
+    page: ProductDetailsPage,
+    isShowHeader: true
+},
+{
+    path: '/*',
+    page: NotFoundPage
+},
 ];
