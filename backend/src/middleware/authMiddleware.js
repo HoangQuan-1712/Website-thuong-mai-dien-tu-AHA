@@ -13,11 +13,32 @@ const authMiddleware = (req, res, next) => {
         })
     }
 
-    const token = req.headers.token.split(' ')[1]
+    // Xử lý token tương tự như refreshToken
+    let token = req.headers.token.trim();
+
+    if (token.includes('Bearer') && token.includes('eyJ')) {
+        const jwtMatches = token.match(/eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g);
+        if (jwtMatches && jwtMatches.length > 0) {
+            token = jwtMatches[jwtMatches.length - 1];
+        }
+    } else if (token.startsWith('Bearer ')) {
+        token = token.split(' ')[1];
+    } else if (token.startsWith('Beare ')) {
+        token = token.split(' ')[1];
+    } else if (token.includes(' ')) {
+        const parts = token.split(' ');
+        token = parts[parts.length - 1];
+    }
+
+    token = token.replace(/^[^a-zA-Z0-9]+/, '').replace(/[^a-zA-Z0-9]+$/, '');
+
+    console.log('Processed token for auth:', token);
+
     jwt.verify(token, process.env.ACCESS_TOKEN, function(err, user) {
         if (err) {
+            console.error('JWT verification error:', err.message);
             return res.status(401).json({
-                message: 'The authentication',
+                message: 'The authentication failed',
                 status: 'ERROR'
             })
         }
@@ -45,12 +66,33 @@ const authUserMiddleware = (req, res, next) => {
         })
     }
 
-    const token = req.headers.token.split(' ')[1]
+    // Xử lý token tương tự như refreshToken
+    let token = req.headers.token.trim();
+
+    if (token.includes('Bearer') && token.includes('eyJ')) {
+        const jwtMatches = token.match(/eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g);
+        if (jwtMatches && jwtMatches.length > 0) {
+            token = jwtMatches[jwtMatches.length - 1];
+        }
+    } else if (token.startsWith('Bearer ')) {
+        token = token.split(' ')[1];
+    } else if (token.startsWith('Beare ')) {
+        token = token.split(' ')[1];
+    } else if (token.includes(' ')) {
+        const parts = token.split(' ');
+        token = parts[parts.length - 1];
+    }
+
+    token = token.replace(/^[^a-zA-Z0-9]+/, '').replace(/[^a-zA-Z0-9]+$/, '');
+
+    console.log('Processed token for user auth:', token);
+
     const userId = req.params.id
     jwt.verify(token, process.env.ACCESS_TOKEN, function(err, user) {
         if (err) {
+            console.error('JWT verification error:', err.message);
             return res.status(401).json({
-                message: 'The authentication',
+                message: 'The authentication failed',
                 status: 'ERROR'
             })
         }

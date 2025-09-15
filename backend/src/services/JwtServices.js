@@ -13,7 +13,6 @@ const genneralAccessToken = async(payload) => {
 }
 
 const genneralRefreshToken = async(payload) => {
-
     const refresh_token = jwt.sign({
         payload
     }, process.env.REFRESH_TOKEN, {
@@ -26,28 +25,57 @@ const refreshTokenJwtService = async(token) => {
     return new Promise(async(resolve, reject) => {
         try {
             console.log('token', token)
+
+            // Kiểm tra REFRESH_TOKEN có tồn tại không
+            if (!process.env.REFRESH_TOKEN) {
+                reject(new Error('REFRESH_TOKEN không được định nghĩa trong biến môi trường'))
+                return
+            }
+
             jwt.verify(token, process.env.REFRESH_TOKEN, async(err, user) => {
-                if (err || !user) {
+                if (err) {
+                    console.error('JWT verification error:', err.message)
                     resolve({
                         status: 'ERR',
-                        message: 'The refresh token is not valid'
+                        message: 'The refresh token is not valid or expired'
                     })
+                    return
                 }
+
+                if (!user || !user.payload) {
+                    resolve({
+                        status: 'ERR',
+                        message: 'Invalid token payload'
+                    })
+                    return
+                }
+
                 console.log('user', user)
                 const { payload } = user
-                const access_token = await genneralAccessToken({
-                    id: payload && payload.id,
-                    isAdmin: payload && payload.isAdmin
-                })
-                console.log('access_token', access_token)
-                resolve({
-                    status: 'OK',
-                    message: 'SUCCESS',
-                    access_token
-                })
+
+                try {
+                    const access_token = await genneralAccessToken({
+                        id: payload.id,
+                        isAdmin: payload.isAdmin
+                    })
+
+                    console.log('access_token', access_token)
+                    resolve({
+                        status: 'OK',
+                        message: 'SUCCESS',
+                        access_token
+                    })
+                } catch (tokenError) {
+                    console.error('Error generating access token:', tokenError)
+                    resolve({
+                        status: 'ERR',
+                        message: 'Failed to generate access token'
+                    })
+                }
             })
 
         } catch (e) {
+            console.error('Refresh token service error:', e)
             reject(e)
         }
     })

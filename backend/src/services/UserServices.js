@@ -22,7 +22,7 @@ const createUser = (newUser) => {
             })
             if (checkUser !== null) {
                 resolve({
-                    status: 'OK',
+                    status: 'ERR',
                     message: 'The email is already'
                 })
             }
@@ -54,30 +54,35 @@ const createUser = (newUser) => {
 
 const loginUser = (userLogin) => {
     return new Promise(async(resolve, reject) => {
-        const { name, email, password, confirmPassword, phone } = userLogin
+        const { email, password } = userLogin
         try {
 
             // Kiểm tra JWT_SECRET
-            if (!process.env.JWT_SECRET) {
-                throw new Error("JWT_SECRET không được định nghĩa trong biến môi trường");
+            if (!process.env.ACCESS_TOKEN || !process.env.REFRESH_TOKEN) {
+                throw new Error("JWT tokens không được định nghĩa trong biến môi trường");
             }
+
             const checkUser = await User.findOne({
                 email: email
             })
+
             if (checkUser === null) {
                 resolve({
-                    status: 'OK',
+                    status: 'ERR',
                     message: 'The user is not defined'
                 })
+                return
             }
 
             const comparePassword = bcrypt.compareSync(password, checkUser.password)
             console.log('comparePassword', comparePassword)
+
             if (!comparePassword) {
                 resolve({
-                    status: 'OK',
-                    message: 'the password or user is incorrect'
+                    status: 'ERR',
+                    message: 'The password or user is incorrect'
                 })
+                return
             }
 
             const access_token = await genneralAccessToken({
@@ -95,7 +100,6 @@ const loginUser = (userLogin) => {
                 message: 'SUCCESS',
                 access_token,
                 refresh_token
-
             })
 
         } catch (e) {
@@ -157,15 +161,19 @@ const deleteUser = (id) => {
     })
 }
 
-const getAllUser = () => {
+const getAllUser = (limit, page) => {
     return new Promise(async(resolve, reject) => {
         try {
-            const allUser = await User.find()
+            const totalUser = await User.estimatedDocumentCount()
+            const allUser = await User.find().limit(limit).skip(page * limit)
 
             resolve({
                 status: 'OK',
                 message: 'SUCCESS',
-                data: allUser
+                data: allUser,
+                total: totalUser,
+                pageCurrent: Number(page + 1),
+                totalPage: Math.ceil(totalUser / limit)
             })
 
         } catch (e) {
