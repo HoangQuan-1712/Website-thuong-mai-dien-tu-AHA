@@ -13,6 +13,9 @@ const PassForPhoneNumber = () => {
     const NavigatorForgetPass = () => {
         navigate('/forgot-password');
     }
+    const NavigatorClose = () => {
+        navigate('/');
+    }
     return (
         <div style={{
             display: 'flex',
@@ -40,7 +43,7 @@ const PassForPhoneNumber = () => {
                     cursor: 'pointer',
                     zIndex: '10'
                 }}>
-                    <Image
+                    <Image onClick={NavigatorClose}
                         style={{
                             marginTop: '-26px',
                             marginRight: '-22px'

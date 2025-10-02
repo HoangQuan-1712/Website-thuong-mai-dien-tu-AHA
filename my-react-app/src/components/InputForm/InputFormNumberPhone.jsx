@@ -3,7 +3,7 @@ import React, { useState } from "react"
 
 
 const InputFormNumberPhone = ({ props}) => {
-    const [valueInput, setValueInput] = useState('')
+    const [valueInput] = useState('')
     return (
         <div>
             <Input style={{width: '100%', padding: '5px 0px', border: 'none',

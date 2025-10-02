@@ -1,28 +1,29 @@
 const jwt = require("jsonwebtoken")
 const dotenv = require("dotenv")
+dotenv.config()
 
-const genneralAccessToken = async(payload) => {
+const genneralAccessToken = async (payload) => {
     console.log('payload', payload);
 
     const access_token = jwt.sign({
-        payload
+        ...payload
     }, process.env.ACCESS_TOKEN, {
         expiresIn: '30s'
     })
     return access_token
 }
 
-const genneralRefreshToken = async(payload) => {
+const genneralRefreshToken = async (payload) => {
     const refresh_token = jwt.sign({
-        payload
+        ...payload
     }, process.env.REFRESH_TOKEN, {
         expiresIn: '365d'
     })
     return refresh_token
 }
 
-const refreshTokenJwtService = async(token) => {
-    return new Promise(async(resolve, reject) => {
+const refreshTokenJwtService = async (token) => {
+    return new Promise(async (resolve, reject) => {
         try {
             console.log('token', token)
 
@@ -32,7 +33,7 @@ const refreshTokenJwtService = async(token) => {
                 return
             }
 
-            jwt.verify(token, process.env.REFRESH_TOKEN, async(err, user) => {
+            jwt.verify(token, process.env.REFRESH_TOKEN, async (err, user) => {
                 if (err) {
                     console.error('JWT verification error:', err.message)
                     resolve({
@@ -42,7 +43,7 @@ const refreshTokenJwtService = async(token) => {
                     return
                 }
 
-                if (!user || !user.payload) {
+                if (!user || (!user.id && !user._id)) {
                     resolve({
                         status: 'ERR',
                         message: 'Invalid token payload'
@@ -50,13 +51,11 @@ const refreshTokenJwtService = async(token) => {
                     return
                 }
 
-                console.log('user', user)
-                const { payload } = user
 
                 try {
                     const access_token = await genneralAccessToken({
-                        id: payload.id,
-                        isAdmin: payload.isAdmin
+                        id: user.id || user._id,
+                        isAdmin: user.isAdmin
                     })
 
                     console.log('access_token', access_token)
@@ -80,6 +79,8 @@ const refreshTokenJwtService = async(token) => {
         }
     })
 }
+
+
 
 module.exports = {
     genneralAccessToken,

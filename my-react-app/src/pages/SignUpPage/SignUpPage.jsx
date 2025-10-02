@@ -8,15 +8,19 @@ import CloseLogo from "../../assets/images/close.png"
 import { Image } from "antd"
 import InputFormNumberPhone from "../../components/InputForm/InputFormNumberPhone"
 import { LeftOutlined } from '@ant-design/icons'
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
+
 
 const SignUnPage = () => {
-     const navigate = useNavigate();
+    const navigate = useNavigate();
     // const handleNavigatePassPhone = () => {
     //     navigate('/pass-for-phone-number');
     // }
     const NavigatorReturn = () => {
         navigate('/sign-in-numberphone');
+    }
+    const NavigatorClose = () => {
+        navigate('/');
     }
     return (
         <div style={{
@@ -35,7 +39,7 @@ const SignUnPage = () => {
                     cursor: 'pointer',
                     zIndex: '10'
                 }}>
-                    <Image style={{ marginTop: '-26px', marginRight: '-22px' }} src={CloseLogo} alt="logo-close" preview={false} />
+                    <Image onClick={NavigatorClose} style={{ marginTop: '-26px', marginRight: '-22px' }} src={CloseLogo} alt="logo-close" preview={false} />
                 </button>
                 <WrapperContainerLeft>
                     <LeftOutlined onClick={NavigatorReturn} style={{ fontSize: '20px', marginBottom: '20px', cursor: 'pointer', paddingBottom: '20px' }} />

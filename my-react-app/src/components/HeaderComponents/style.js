@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { Row } from 'antd'
 
 export const WrapperHeader = styled(Row)
-`
+  `
   padding: 10px 130px;
   background-color: rgb(62, 135, 188);
   align-items: center;
@@ -11,7 +11,7 @@ export const WrapperHeader = styled(Row)
   box-sizing: border-box;
 `;
 
-export const WrapperTextHeader = styled.span `
+export const WrapperTextHeader = styled.span`
 font-size: 12px;
 color: #fff;
 font-weight: bold;
@@ -22,7 +22,7 @@ flex-direction: column;
 `;
 
 
-export const WrapperAccountHeader = styled.div `
+export const WrapperAccountHeader = styled.div`
     display: flex;
     align-items: center;
     color: #fff;
@@ -31,9 +31,18 @@ export const WrapperAccountHeader = styled.div `
 `;
 
 
-export const WrapperCartHeader = styled.div `
+export const WrapperCartHeader = styled.div`
     display: flex;
     align-items: center;
     color: #fff;
     white-space: nowrap;
 `;
+
+export const WapperContentPopover = styled.p`
+    cursor: pointer;
+    &:hover {
+      background: #f0f0f0;
+      color: #048ba5ff;
+      filter: brightness(135%);
+    }
+`

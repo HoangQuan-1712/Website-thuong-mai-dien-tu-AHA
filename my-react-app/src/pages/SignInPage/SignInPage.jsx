@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { WrapperContainerLeft, WrapperContainerRight } from "./style";
 import InputForm from "../../components/InputForm/InputForm"
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent"
@@ -11,18 +11,48 @@ import { useNavigate } from "react-router-dom";
 import * as UserServices from '../../services/UserServices'
 import { UseMutatonHooks } from "../../hooks/UseMutationHooks";
 import Loading from "../../components/LoadingComponent/Loading";
+//import * as message from '../../components/Message/Message'
+import { jwtDecode } from "jwt-decode";
+import { useDispatch } from 'react-redux'
+import { updateUser } from "../../redux/slices/userSlide";
 
 
 const SignInPage = () => {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const mutation = UseMutatonHooks(
         (data) => UserServices.loginUser(data)
-      )
-      console.log('mutation', mutation);
-      const { data, isPending } = mutation
-      
+    )
+    console.log('mutation', mutation);
+    const { data, isPending, isSuccess } = mutation
+
+
+    useEffect(() => {
+        if (isSuccess) {
+            navigate('/')
+            localStorage.setItem('access_token', JSON.stringify(data?.access_token))
+            if (data?.access_token) {
+                try {
+                    const decoded = jwtDecode(data?.access_token)
+                    if (decoded?.id) {
+                        handleGetDetailsUser(decoded?.id, data?.access_token)
+                    }
+                } catch (error) {
+                    console.error('Error decoding token:', error)
+                }
+            }
+
+        }
+    }, [isSuccess])
+
+
+    const handleGetDetailsUser = async (id, token) => {
+        const res = await UserServices.getDetailsUser(id, token)
+        dispatch(updateUser({ ...res?.data, access_token: token }))
+    }
 
     const handleOnchangeEmail = (e) => {
         console.log(e.target.value);
@@ -35,8 +65,7 @@ const SignInPage = () => {
 
         setPassword(e.target.value);
     }
-    
-    const navigate = useNavigate();
+
     const handleNavigateSinUp = () => {
         navigate('/sign-up');
     }
@@ -47,13 +76,17 @@ const SignInPage = () => {
         navigate('/sign-in-numberphone');
     }
 
+    const NavigatorClose = () => {
+        navigate('/');
+    }
+
     const handleSignIn = () => {
         mutation.mutate({
             email,
             password
         })
         console.log(`'sign-in' ${email} ${password}`);
-        
+
     }
     return (
         <div style={{
@@ -72,7 +105,7 @@ const SignInPage = () => {
                     cursor: 'pointer',
                     zIndex: '10'
                 }}>
-                    <Image style={{ marginTop: '-26px', marginRight: '-22px' }} src={CloseLogo} alt="logo-close" preview={false} />
+                    <Image onClick={NavigatorClose} style={{ marginTop: '-26px', marginRight: '-22px' }} src={CloseLogo} alt="logo-close" preview={false} />
                 </button>
 
                 <WrapperContainerLeft>
@@ -81,26 +114,26 @@ const SignInPage = () => {
                         Đăng nhập bằng email</h1>
                     <p style={{ margin: '0px', fontSize: '15px', lineHeight: '20px', paddingBottom: '10px' }}>
                         Nhập email và mật khẩu tài khoản AHA</p>
-                    <InputForm  value={email}
+                    <InputForm value={email}
                         handleOnchange={handleOnchangeEmail}
                         password={password}
                         handleOnchangePassword={handleOnchangePassword} />
-                        {data?.status === 'ERR' && <span style={{color: 'red'}}>{data?.message}</span>}
+                    {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
                     <Loading isLoading={isPending}>
-                       <ButtonComponent onClick={handleSignIn}
-                    disabled={!email.length || !password.length }
-                        size={40}
-                        styleButton={{
-                            backgroundColor: 'rgb(255, 57, 69)',
-                            height: '48px',
-                            width: '100%',
-                            border: 'none',
-                            borderRadius: '4px',
-                            margin: '26px 0 10px'
-                        }}
-                        textButton={'Đăng nhập'}
-                        styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
-                    />
+                        <ButtonComponent onClick={handleSignIn}
+                            disabled={!email.length || !password.length}
+                            size={40}
+                            styleButton={{
+                                backgroundColor: 'rgb(255, 57, 69)',
+                                height: '48px',
+                                width: '100%',
+                                border: 'none',
+                                borderRadius: '4px',
+                                margin: '26px 0 10px'
+                            }}
+                            textButton={'Đăng nhập'}
+                            styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
+                        />
                     </Loading>
                     <p style={{
                         color: 'rgb(13, 92, 182)', fontSize: '13px', margin: '20px 0px 0px',
