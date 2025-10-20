@@ -10,6 +10,7 @@ import ProductDetailsPage from '../pages/ProductDetailsPage/ProductDetailsPage';
 import PassForPhoneNumber from '../pages/SignUpPage/PassForPhoneNumber';
 import ForgotPassword from '../pages/SignUpPage/ForgotPassword';
 import Register from '../pages/SignUpPage/Register';
+import ProfilePage from '../pages/Profile/ProfilePage';
 
 export const routes = [{
     path: '/',
@@ -19,52 +20,68 @@ export const routes = [{
 {
     path: '/order',
     page: OrderPage,
-    isShowHeader: true
+    isShowHeader: true,
+    isShowFooter: true
 },
 {
     path: '/products',
     page: ProductsPage,
-    isShowHeader: true
+    isShowHeader: true,
+    isShowFooter: true
 },
 {
     path: '/type',
     page: TypeProductPage,
-    isShowHeader: true
+    isShowHeader: true,
+    isShowFooter: true
 },
 {
     path: '/sign-in',
     page: SignInPage,
-    isShowHeader: false
+    isShowHeader: false,
+    isShowFooter: false
 },
 {
     path: '/sign-up',
     page: SignUpPage,
-    isShowHeader: false
+    isShowHeader: false,
+    isShowFooter: false
 },
 {
     path: '/sign-in-numberphone',
     page: SignInPageNumberPhone,
-    isShowHeader: false
+    isShowHeader: false,
+    isShowFooter: false
 },
 {
     path: '/pass-for-phonenumber',
     page: PassForPhoneNumber,
-    isShowHeader: false
+    isShowHeader: false,
+    isShowFooter: false
 },
 {
     path: '/forgot-password',
     page: ForgotPassword,
-    isShowHeader: false
+    isShowHeader: false,
+    isShowFooter: false
 },
 {
     path: '/register',
     page: Register,
-    isShowHeader: false
+    isShowHeader: false,
+    isShowFooter: false
 },
 {
     path: '/product-details',
     page: ProductDetailsPage,
-    isShowHeader: true
+    isShowHeader: true,
+    isShowFooter: true
+},
+{
+    path: '/profile/*',
+    page: ProfilePage,
+    isShowHeader: true,
+    isShowFooter: true
 },
 {
     path: '/*',

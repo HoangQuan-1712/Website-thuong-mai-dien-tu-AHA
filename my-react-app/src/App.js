@@ -18,6 +18,7 @@ function App() {
         if (decoded?.id) {
             handleGetDetailsUser(decoded?.id, storageData)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // const handleDecoded = () => {

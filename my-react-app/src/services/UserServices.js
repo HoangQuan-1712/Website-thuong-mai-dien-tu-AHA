@@ -24,7 +24,38 @@ export const signupUser = async (data) => {
     return res.data
 }
 
+export const updateUserProfile = async (id, data, access_token) => {
+    // Debug log
+    console.log('updateUserProfile called with:');
+    console.log('- id:', id);
+    console.log('- data:', data);
+    console.log('- access_token:', access_token);
+
+    if (!id) {
+        throw new Error('User ID is required for update');
+    }
+
+    // SỬA: Dùng buildUrl thay vì ghép trực tiếp để tránh duplicate "/api/"
+    const url = buildUrl(`user/update-user/${id}`);
+    console.log('- Full URL:', url);
+
+    try {
+        const res = await axiosJWT.put(url, data, {
+            headers: {
+                token: `Bearer ${access_token}`,
+            },
+        });
+        console.log('Update response:', res);
+        return res;
+    } catch (error) {
+        console.error('Update error:', error.response || error);
+        throw error;
+    }
+};
+
 export const getDetailsUser = async (id, access_token) => {
+    console.log('getDetailsUser called with id:', id);
+
     const res = await axiosJWT.get(
         buildUrl(`user/get-details/${id}`), {
         headers: {
@@ -32,10 +63,10 @@ export const getDetailsUser = async (id, access_token) => {
             Authorization: `Bearer ${access_token}`
         },
         withCredentials: true
+    });
 
-    }
-    )
-    return res.data
+    console.log('getDetailsUser response:', res.data);
+    return res.data;
 }
 
 export const refreshToken = async () => {

@@ -10,25 +10,40 @@ const orderSchema = new mongoose.Schema({
             ref: 'Product',
             required: true,
         },
-    }, ],
+    },],
+
+    shippingAddressId: { type: mongoose.Schema.Types.ObjectId, ref: 'Address' },
+
     shippingAddress: {
-        fullName: { type: String, required: true },
-        address: { type: String, required: true },
-        city: { type: String, required: true },
-        phone: { type: Number, required: true },
+        // snapshot từ Address tại thời điểm đặt hàng
+        fullName: { type: String, required: true },   // tên người nhận -> lấy từ Address.fullName
+        phone: { type: String, required: true },   // lưu dạng String
+        addressLine1: { type: String, required: true },
+        addressLine2: { type: String },
+        ward: { type: String },
+        district: { type: String },
+        province: { type: String, required: true },
+        country: { type: String, default: 'VN' },
+        // Tuỳ chọn: chuỗi gộp để hiển thị nhanh
+        addressText: { type: String } // addressLine1, addressLine2, ward, district, province
     },
-    PaymentMethod: { type: String, required: true },
+
+    paymentMethod: { type: String, required: true },    // camelCase cho thống nhất
     itemsPrice: { type: Number, required: true },
     shippingPrice: { type: Number, required: true },
-    taxPrice: { type: String, required: true },
+    taxPrice: { type: Number, required: true },
     totalPrice: { type: Number, required: true },
+
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+
     isPaid: { type: Boolean, default: false },
-    paidAt: { type: Data },
+    paidAt: { type: Date },
+
     isDelivered: { type: Boolean, default: false },
     deliveredAt: { type: Date },
-}, {
-    timestamps: true,
-});
+},
+    { timestamps: true }
+);
+
 const Order = mongoose.model('Order', orderSchema);
 module.exports = Order

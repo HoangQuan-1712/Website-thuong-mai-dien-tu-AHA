@@ -46,12 +46,31 @@ const SignInPage = () => {
             }
 
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccess])
 
 
     const handleGetDetailsUser = async (id, token) => {
-        const res = await UserServices.getDetailsUser(id, token)
-        dispatch(updateUser({ ...res?.data, access_token: token }))
+        try {
+            console.log('Fetching user details for ID:', id);
+            const res = await UserServices.getDetailsUser(id, token);
+            console.log('User details response:', res);
+
+            if (res?.data) {
+                // Đảm bảo lưu đầy đủ thông tin user vào Redux
+                dispatch(updateUser({
+                    ...res.data,
+                    _id: res.data._id || id, // Đảm bảo có _id
+                    id: res.data._id || id,   // Thêm cả field id
+                    access_token: token
+                }));
+
+                console.log('User updated in Redux');
+                navigate('/');
+            }
+        } catch (error) {
+            console.error('Error fetching user details:', error);
+        }
     }
 
     const handleOnchangeEmail = (e) => {

@@ -19,6 +19,13 @@ const HeaderComponent = () => {
     const handleNAvigateLogin = () => {
         navigate('sign-in-numberphone');
     }
+    const handleProfile = () => {
+        navigate('/profile/*');
+    }
+    const handlePage = () => {
+        navigate('/');
+    }
+
     const handleLogout = async () => {
         setLoading(true);
         await UserServices.logoutUser();
@@ -33,17 +40,18 @@ const HeaderComponent = () => {
     const content = (
         <div>
             <WapperContentPopover onClick={handleLogout}>Đăng xuất</WapperContentPopover>
-            <WapperContentPopover>Thông tin người dùng</WapperContentPopover>
+            <WapperContentPopover onClick={handleProfile}>Thông tin người dùng</WapperContentPopover>
         </div>
     );
 
     const user = useSelector(state => state.user)
+    const displayName = user?.username || user?.name || user?.email || '';
     return (
         <div>
             <WrapperHeader gutter={0} align="middle"  >
                 <Col span={6}>
                     <WrapperTextHeader>
-                        <img src="/logo.png" alt="logo" style={{ height: 40, width: 96, display: 'block', margin: '0 auto', alignItems: 'center' }} />
+                        <img onClick={handlePage} src="/logo.png" alt="logo" style={{ height: 40, width: 96, display: 'block', margin: '0 auto', alignItems: 'center' }} />
                         <span>Tốt & Nhanh</span>
                     </WrapperTextHeader>
                 </Col>
@@ -65,7 +73,7 @@ const HeaderComponent = () => {
                             {user?.name ? (
                                 <>
                                     <Popover content={content} trigger="click">
-                                        <div style={{ cursor: 'pointer' }}>{user?.name}</div>
+                                        <div style={{ cursor: 'pointer' }}>{displayName}</div>
                                     </Popover>
                                 </>
 
