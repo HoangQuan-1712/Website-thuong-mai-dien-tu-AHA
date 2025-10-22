@@ -44,6 +44,7 @@ const HeaderComponent = () => {
         </div>
     );
 
+
     const user = useSelector(state => state.user)
     const displayName = user?.username || user?.name || user?.email || '';
     return (
@@ -68,7 +69,26 @@ const HeaderComponent = () => {
                 <Col style={{ display: 'flex' }} span={6}>
                     <Loading isLoading={loading}>
                         <WrapperAccountHeader>
-                            <UserOutlined style={{ fontSize: 24, paddingLeft: 20 }} />
+                            {user?.avatar ? (
+                                <img
+                                    src={user.avatar}
+                                    alt="avatar"
+                                    style={{
+                                        width: 32,
+                                        height: 32,
+                                        borderRadius: '50%',
+                                        objectFit: 'cover',
+                                        marginLeft: 20,
+                                        border: '2px solid #e0e0e0',
+                                        cursor: 'pointer',
+                                        transition: 'transform 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
+                                    onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                                />
+                            ) : (
+                                <UserOutlined style={{ fontSize: 24, paddingLeft: 20 }} />
+                            )}
 
                             {user?.name ? (
                                 <>

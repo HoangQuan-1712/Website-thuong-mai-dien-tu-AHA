@@ -5,7 +5,7 @@ export const WrapperCardStyle = styled(Card)
     `
     width: 240px;
     &  img {
-        width: 130px;
+        width: 151px;
         height: 184px;
         align-item: center;
     }
@@ -56,9 +56,16 @@ export const WrapperDiscountText = styled.span`
 `;
 
 export const WrapperStyleTextSell = styled.span`
-    font-size: 15px;
-    line-height: 24px;
-    color: rgb(120,120,120);
+    --tw-space-x-reverse: 0;
+    margin-left: calc(.25rem * (1 - var(--tw-space-x-reverse)));
+    margin-right: calc(.25rem * var(--tw-space-x-reverse));
+    color: rgba(0, 0, 0, .87);
+    font-size: 1.0rem;
+    line-height: 1rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+
 `;
 
 export const WapperPriceDiscount = styled.div`

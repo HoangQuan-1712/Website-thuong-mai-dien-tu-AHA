@@ -1,28 +1,33 @@
 const Product = require("../models/ProductModel")
 
 const createProduct = (newProduct) => {
-    return new Promise(async(resolve, reject) => {
-        const { name, image, type, price, countInStock, rating, description } = newProduct
+    return new Promise(async (resolve, reject) => {
+        const { name, image, type, price, countInStock, rating, description, discount, selled, discounts } = newProduct
         try {
-
+            // SỬA: Kiểm tra product trùng
             const checkProduct = await Product.findOne({
                 name: name
             })
             if (checkProduct !== null) {
                 resolve({
-                    status: 'OK',
+                    status: 'ERR', // SỬA: 'OK' -> 'ERR'
                     message: 'The name of product is already'
                 })
+                return; // THÊM: return để dừng function
             }
 
+            // SỬA: Thêm giá trị mặc định cho các trường optional
             const createdProduct = await Product.create({
                 name,
                 image,
                 type,
                 price,
                 countInStock,
-                rating,
-                description
+                rating: rating || 0,
+                description: description || '',
+                discount: discount || 0,
+                discounts: discounts || [],
+                selled: selled || 0
             })
 
             if (createdProduct) {
@@ -30,7 +35,6 @@ const createProduct = (newProduct) => {
                     status: 'OK',
                     message: 'SUCCESS',
                     data: createdProduct
-
                 })
             }
 
@@ -41,7 +45,7 @@ const createProduct = (newProduct) => {
 }
 
 const updateProduct = (id, data) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             const checkProduct = await Product.findOne({
                 _id: id
@@ -68,7 +72,7 @@ const updateProduct = (id, data) => {
 }
 
 const getDetailsProduct = (id) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             const product = await Product.findOne({
                 _id: id
@@ -93,7 +97,7 @@ const getDetailsProduct = (id) => {
 }
 
 const deleteProduct = (id) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             const checkProduct = await Product.findOne({
                 _id: id
@@ -120,14 +124,15 @@ const deleteProduct = (id) => {
 
 
 const getAllProduct = (limit, page, sort = null, filter) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             const totalProduct = await Product.estimatedDocumentCount()
 
             if (filter) {
                 const label = filter[0];
                 const allObjectFilter = await Product.find({
-                    [label]: { '$regex': filter[1] } })
+                    [label]: { '$regex': filter[1] }
+                })
                 resolve({
                     status: 'OK',
                     message: 'SUCCESS',

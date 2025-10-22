@@ -126,6 +126,10 @@ const UserProfile = () => {
         reader.onload = async (ev) => {
             const base64Avatar = ev.target.result;
             setAvatar(base64Avatar);
+            dispatch(updateUser({
+                ...user,
+                avatar: base64Avatar
+            }));
 
             try {
                 // Gọi API cập nhật chỉ avatar

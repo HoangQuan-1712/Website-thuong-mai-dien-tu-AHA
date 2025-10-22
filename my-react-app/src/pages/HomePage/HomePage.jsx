@@ -40,6 +40,8 @@ import image14 from "../../assets/images/image14.webp"
 import ImageComponent from '../../components/ImageComponent/ImageComponent';
 import FooterComponent from '../../components/FooterComponent/FooterComponent'
 import ChatComponent from '../../components/ChatComponent/ChatComponent'
+import { useQuery } from '@tanstack/react-query'
+import * as ProductServices from '../../services/ProductServices'
 
 
 //import NavbarComponent from '../../components/NavbarComponent/NavbarComponent'
@@ -51,6 +53,40 @@ const HomePage = () => {
         'Mẹ và bé', 'Làm đẹp', 'Gia dụng', 'Thời trang nữ', 'Thời trang nam',
         'Thời trang trẻ em', 'Giày dép', 'Túi xách', 'Đồng hồ', 'Trang sức'
     ];
+
+
+    const fetchProductAll = async () => {
+        try {
+            const res = await ProductServices.getAllProduct();
+            console.log('API response:', res);
+            return res;
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            throw error;
+        }
+    }
+
+    const { isLoading, data: products, error } = useQuery({
+        queryKey: ['products'],
+        queryFn: fetchProductAll,
+        select: (res) => {
+            console.log('Raw API response:', res);
+            // Kiểm tra cấu trúc response
+            if (res && res.data) {
+                console.log('Products count:', res.data.length);
+                console.log('All products:', res.data);
+                return res.data;
+            }
+            return [];
+        },
+        retry: 3,
+        retryDelay: 1000
+    });
+
+    // Thêm debug error
+    if (error) {
+        console.error('Query error:', error);
+    }
 
     /* ===== Menu kéo ngang (giữ logic, chỉ đổi nút) ===== */
     const menuRef = useRef(null);
@@ -416,18 +452,42 @@ const HomePage = () => {
                 </Row >
 
                 <WrapperProducts style={{ marginTop: '20px' }}>
-                    <CardComponent />
-                    <CardComponent />
-                    <CardComponent />
-                    <CardComponent />
-                    <CardComponent />
-                    <CardComponent />
-                    <CardComponent />
-                    <CardComponent />
-                    <CardComponent />
-                    <CardComponent />
-                    <CardComponent />
-                    <CardComponent />
+                    {isLoading ? (
+                        <div style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            padding: '50px',
+                            fontSize: '16px',
+                            color: '#666'
+                        }}>
+                            Đang tải sản phẩm...
+                        </div>
+                    ) : !products || !Array.isArray(products) || products.length === 0 ? ( // SỬA: Thêm check Array.isArray
+                        <div style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            padding: '50px',
+                            fontSize: '16px',
+                            color: '#999'
+                        }}>
+                            Không có sản phẩm nào
+                        </div>
+                    ) : (
+                        products.map((product) => (
+                            <CardComponent
+                                key={product._id || product.id}
+                                countInStock={product.countInStock}
+                                description={product.description}
+                                image={product.image}
+                                name={product.name}
+                                price={product.price}
+                                rating={product.rating}
+                                type={product.type}
+                                discount={product.discount}
+                                selled={product.selled}
+                            />
+                        ))
+                    )}
                 </WrapperProducts>
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
                     <WrapperButtonMore textButton="Xem thêm" type="outline"

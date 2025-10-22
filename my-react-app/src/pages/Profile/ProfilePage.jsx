@@ -145,6 +145,7 @@ const ProfilePage = () => {
                 </WrapperContainerProfile>
             </div>
         </div >
+
     );
 };
 

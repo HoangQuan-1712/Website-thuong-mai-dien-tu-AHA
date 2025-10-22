@@ -1,9 +1,9 @@
 const ProductServices = require('../services/ProductServices')
 
 
-const createProduct = async(req, res) => {
+const createProduct = async (req, res) => {
     try {
-        const { name, image, type, price, countInStock, rating, description } = req.body
+        const { name, image, type, price, countInStock, rating, description, selled, discount, discounts } = req.body
         console.log('req.body', req.body);
 
         if (!name || !image || !type || !price || !countInStock) {
@@ -21,7 +21,7 @@ const createProduct = async(req, res) => {
     }
 }
 
-const updateProduct = async(req, res) => {
+const updateProduct = async (req, res) => {
     try {
         const productId = req.params.id
         const data = req.body
@@ -41,10 +41,10 @@ const updateProduct = async(req, res) => {
     }
 }
 
-const getDetailsProduct = async(req, res) => {
+const getDetailsProduct = async (req, res) => {
     try {
         const productId = req.params.id
-            //const token = req.headers
+        //const token = req.headers
 
         if (!productId) {
             return res.status(200).json({
@@ -60,10 +60,10 @@ const getDetailsProduct = async(req, res) => {
         })
     }
 }
-const deleteProduct = async(req, res) => {
+const deleteProduct = async (req, res) => {
     try {
         const productId = req.params.id
-            //const token = req.headers
+        //const token = req.headers
 
         if (!productId) {
             return res.status(200).json({
@@ -80,7 +80,7 @@ const deleteProduct = async(req, res) => {
     }
 }
 
-const getAllProduct = async(req, res) => {
+const getAllProduct = async (req, res) => {
     try {
         const { limit, page, sort, filter } = req.query
         let sortParam = null
