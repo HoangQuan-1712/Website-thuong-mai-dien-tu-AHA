@@ -42,10 +42,23 @@ const productSchema = new mongoose.Schema({
     // Bỏ comment discounts array
     discounts: [DiscountPeriodSchema],
 
-    selled: { type: Number, default: 0 }
+    selled: { type: Number, default: 0 },
+
+    origin: {
+        type: String,
+        enum: ['domestic', 'international'],  // 'domestic' = trong nước, 'international' = nước ngoài
+        default: 'domestic',
+        required: true
+    },
+    isFlashSale: { type: Boolean, default: false },
+    flashSaleEndTime: { type: Date, default: null },
+    flashSaleDiscount: { type: Number, default: 0, min: 0, max: 100 }
+
+
 }, {
     timestamps: true
 });
-
+productSchema.index({ origin: 1, rating: -1, selled: -1 });
+productSchema.index({ isFlashSale: 1, flashSaleEndTime: 1 });
 const Product = mongoose.model("Product", productSchema);
 module.exports = Product;

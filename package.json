@@ -1,5 +1,11 @@
 {
   "dependencies": {
-    "jwt-decode": "^4.0.0"
+    "@reduxjs/toolkit": "^2.9.1",
+    "jwt-decode": "^4.0.0",
+    "node-cron": "^4.2.1",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.9.4",
+    "redux-persist": "^6.0.0",
+    "swiper": "^11.2.10"
   }
 }

@@ -8,5 +8,9 @@ router.put('/update/:id', authMiddleware, productController.updateProduct)
 router.get('/get-details/:id', productController.getDetailsProduct)
 router.delete('/delete/:id', productController.deleteProduct)
 router.get('/getAll', productController.getAllProduct)
+router.get('/flash-sale', productController.getFlashSale);
+router.get('/international', productController.getInternational);
+router.post('/update-flash-sale', authMiddleware, productController.forceUpdateFlashSale);
+
 
 module.exports = router

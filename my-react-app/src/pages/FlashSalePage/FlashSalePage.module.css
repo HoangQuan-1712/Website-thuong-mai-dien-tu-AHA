@@ -1,0 +1,190 @@
+:root {
+    --hero-bg: #00197d;
+    --page-bg: #efefef;
+    --card-bg: #fff;
+    --text: #222;
+    --muted: #666;
+    --muted-2: #999;
+    --brand: #ff424e;
+    --chip-bg: #000;
+    --shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    --radius: 8px;
+}
+
+/* page wrapper */
+.page {
+    display: block;
+    background: var(--page-bg);
+}
+
+/* top hero section with slider */
+.hero {
+    background: var(--hero-bg);
+    padding: 20px 0 140px;
+    /* TĂNG padding-bottom lên 140px */
+    margin-bottom: 0;
+    overflow: visible;
+    position: relative;
+    min-height: clamp(280px, 40vw, 520px);
+    /* TĂNG min-height */
+}
+
+/* SliderRow – giữ carousel trong vùng cố định */
+.sliderRow {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    position: relative;
+    /* THÊM */
+    z-index: 10;
+    /* THÊM để carousel nằm trên */
+}
+
+/* Container – giới hạn chiều rộng */
+.container {
+    width: 100%;
+    max-width: 1270px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.sliderWrap {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.sliderWrap :global(img),
+.sliderWrap :global(.slick-slide img) {
+    display: block;
+    width: 100%;
+    height: 380px;
+    max-height: 420px;
+    object-fit: cover;
+}
+
+@media (max-width: 991px) {
+    .sliderWrap {
+        max-width: 100%;
+    }
+
+    .sliderWrap :global(.slick-slide img),
+    .sliderWrap :global(img) {
+        height: 260px;
+    }
+}
+
+/* main content section */
+.content {
+    padding: 0 16px 32px;
+    margin-top: -60px;
+    /* THÊM negative margin để kéo content lên */
+    position: relative;
+    /* THÊM */
+    z-index: 20;
+    /* THÊM để content nằm trên carousel */
+}
+
+@media (min-width: 1200px) {
+    .content {
+        padding: 0 130px 32px;
+        margin-top: -60px;
+        /* GIỮ NGUYÊN negative margin */
+    }
+}
+
+/* generic card */
+.card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* header row */
+.headerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.badge {
+    display: block;
+    height: 32px;
+}
+
+/* timer */
+.timer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: var(--brand);
+}
+
+.pill {
+    background: var(--chip-bg);
+    color: #fff;
+    min-width: 44px;
+    text-align: center;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.sep {
+    font-size: 18px;
+    opacity: 0.85;
+}
+
+.total {
+    font-size: 15px;
+    color: var(--muted);
+}
+
+.totalNum {
+    color: var(--brand);
+}
+
+/* states */
+.center {
+    text-align: center;
+    color: var(--muted);
+    padding: 48px 16px;
+    font-size: 16px;
+}
+
+.error {
+    color: #f5222d;
+}
+
+.muted {
+    color: var(--muted-2);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .hero {
+        padding: 16px 0 100px;
+        /* GIẢM padding cho mobile */
+        min-height: clamp(240px, 50vw, 380px);
+    }
+
+    .content {
+        margin-top: -40px;
+        /* GIẢM negative margin cho mobile */
+    }
+}

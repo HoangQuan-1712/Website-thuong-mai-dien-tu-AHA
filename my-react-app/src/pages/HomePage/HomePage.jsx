@@ -57,7 +57,7 @@ const HomePage = () => {
 
     const fetchProductAll = async () => {
         try {
-            const res = await ProductServices.getAllProduct();
+            const res = await ProductServices.getAllProduct(100, 0);
             console.log('API response:', res);
             return res;
         } catch (error) {
@@ -185,6 +185,50 @@ const HomePage = () => {
         return () => window.removeEventListener('resize', onResize2);
     }, []);
 
+    const { data: flashSaleData } = useQuery({
+        queryKey: ['flashSale'],
+        queryFn: () => ProductServices.getFlashSaleProducts(14),
+        select: (res) => res.data,
+        retry: 2,
+        refetchInterval: 60000 // Refresh mỗi 1 phút
+    });
+
+    const { data: internationalData } = useQuery({
+        queryKey: ['international'],
+        queryFn: () => ProductServices.getInternationalProducts(10),
+        select: (res) => res.data,
+        retry: 2
+    });
+
+    const [timeLeft, setTimeLeft] = useState({
+        hours: 0,
+        minutes: 0,
+        seconds: 0
+    });
+
+    useEffect(() => {
+        if (!flashSaleData?.[0]?.flashSaleEndTime) return;
+
+        const timer = setInterval(() => {
+            const endTime = new Date(flashSaleData[0].flashSaleEndTime);
+            const now = new Date();
+            const diff = endTime - now;
+
+            if (diff <= 0) {
+                setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+                clearInterval(timer);
+                return;
+            }
+
+            setTimeLeft({
+                hours: Math.floor(diff / (1000 * 60 * 60)),
+                minutes: Math.floor((diff / (1000 * 60)) % 60),
+                seconds: Math.floor((diff / 1000) % 60)
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [flashSaleData]);
 
     return (
         <>
@@ -221,21 +265,65 @@ const HomePage = () => {
                     </div>
                 </div>
 
-                <Row style={{ display: 'flex', maxWidth: '100%', overflowX: 'hidden' }}>
+                <Row style={{ marginTop: '20px', display: 'flex', maxWidth: '100%', overflowX: 'hidden' }}>
                     <WrapperProductContainer span={16}>
                         <WrapperHeaderProductContainer>
                             <WrapperLeftHeaderProductContainer>
-                                <div style={{
-                                    display: 'flex',
-                                    gap: '8px',
-                                    alignItems: 'center'
-                                }}>
-                                    <img style={{ maxWidth: '100%', borderStyle: 'none' }}
-                                        src=" https://salt.tikicdn.com/ts/upload/f8/77/0b/0923990ed377f50c3796f9e6ce0dddde.png"
-                                        alt="badge" width="204" height="32" />
+                                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                    <img
+                                        style={{ maxWidth: '100%', borderStyle: 'none' }}
+                                        src="https://salt.tikicdn.com/ts/upload/f8/77/0b/0923990ed377f50c3796f9e6ce0dddde.png"
+                                        alt="Flash Sale"
+                                        width="204"
+                                        height="32"
+                                    />
+
+                                    {/* Countdown Timer */}
+                                    <div style={{
+                                        display: 'flex',
+                                        gap: '8px',
+                                        marginLeft: '16px',
+                                        fontSize: '20px',
+                                        fontWeight: 'bold',
+                                        color: '#ff424e'
+                                    }}>
+                                        <div style={{
+                                            background: '#000',
+                                            color: '#fff',
+                                            padding: '4px 8px',
+                                            borderRadius: '4px',
+                                            minWidth: '40px',
+                                            textAlign: 'center'
+                                        }}>
+                                            {String(timeLeft.hours).padStart(2, '0')}
+                                        </div>
+                                        <span>:</span>
+                                        <div style={{
+                                            background: '#000',
+                                            color: '#fff',
+                                            padding: '4px 8px',
+                                            borderRadius: '4px',
+                                            minWidth: '40px',
+                                            textAlign: 'center'
+                                        }}>
+                                            {String(timeLeft.minutes).padStart(2, '0')}
+                                        </div>
+                                        <span>:</span>
+                                        <div style={{
+                                            background: '#000',
+                                            color: '#fff',
+                                            padding: '4px 8px',
+                                            borderRadius: '4px',
+                                            minWidth: '40px',
+                                            textAlign: 'center'
+                                        }}>
+                                            {String(timeLeft.seconds).padStart(2, '0')}
+                                        </div>
+                                    </div>
                                 </div>
+
                                 <a
-                                    href="https://tiki.vn/khuyen-mai/hero-top-san-pham-ban-chay" cursorshover="true"
+                                    href="/flash-sale"
                                     style={{
                                         fontWeight: 500,
                                         fontSize: 14,
@@ -261,97 +349,86 @@ const HomePage = () => {
                                         minWidth: '100%',
                                     }}
                                 >
-                                    <div data-card style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card style={{ flex: '0 0 auto' }}><CardComponent /></div>
+                                    {flashSaleData?.map((product) => (
+                                        <div key={product._id} data-card style={{ flex: '0 0 auto' }}>
+                                            <CardComponent
+                                                {...product}
+                                                // Override discount với flashSaleDiscount
+                                                discount={product.flashSaleDiscount}
+                                                isFlashSale={true}
+                                            />
+                                        </div>
+                                    ))}
                                 </span>
                             </div>
 
                             <ArrowButtonComponent direction="right" onClick={nextCards} ariaLabel="Xem tiếp" />
-
                             <ArrowButtonComponent direction="left" onClick={prevCards} ariaLabel="Xem trước" />
-
                         </div>
                     </WrapperProductContainer>
 
-                    <Col span={8}><SliderComponent arrImages2={[Slide7, Slide8, Slide9]} /></Col>
+                    <Col span={8}>
+                        <SliderComponent arrImages2={[Slide7, Slide8, Slide9]} />
+                    </Col>
                 </Row>
 
                 <Row style={{ marginTop: '20px', display: 'flex', maxWidth: '100%', overflowX: 'hidden' }}>
                     <WrapperProductContainer span={24}>
                         <WrapperHeaderProductContainer>
                             <WrapperLeftHeaderProductContainer>
-                                <div style={{
-                                    display: 'flex',
-                                    gap: '8px',
-                                    alignItems: 'center'
-                                }}>
-                                    <div
-                                        style={{
-                                            display: '-webkit-box',
-                                            WebkitBoxOrient: 'vertical',
-                                            WebkitLineClamp: 1,
-                                            overflow: 'hidden',
-                                        }}
-                                    >Hàng ngoại giá tốt</div>
+                                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                    <div style={{
+                                        fontSize: '20px',
+                                        fontWeight: 'bold',
+                                        color: '#333',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '8px'
+                                    }}>
+                                        🌍 Hàng ngoại giá tốt
+                                    </div>
                                 </div>
-                                <a style={{
-                                    fontWeight: '500',
-                                    fontSize: '14px',
-                                    lineHeight: '150%',
-                                    color: 'rgb(10, 104, 255)',
-                                    textDecoration: 'none',
-                                    backgroundColor: 'transparent'
-                                }} href="https://tiki.vn/khuyen-mai/hang-nhap-khau-chinh-hang" >Xem tất cả</a>
+
+                                <a
+                                    href="/international"
+                                    style={{
+                                        fontWeight: 500,
+                                        fontSize: 14,
+                                        lineHeight: 1.5,
+                                        color: 'rgb(10, 104, 255)',
+                                        textDecoration: 'none',
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    Xem tất cả
+                                </a>
                             </WrapperLeftHeaderProductContainer>
                         </WrapperHeaderProductContainer>
-                        <div style={{
-                            width: '100%',
-                            position: 'relative',
-                            display: 'block',
-                            unicodeBidi: 'isolate',
-                            boxSizing: 'border-box'
-                        }}>
-                            <div style={{
-                                overflow: 'hidden',
-                                display: 'block',
-                                unicodeBidi: 'isolate'
-                            }} ref={viewportRef2}>
+
+                        {/* International Products Carousel */}
+                        <div style={{ width: '100%', position: 'relative' }}>
+                            <div style={{ overflow: 'hidden' }} ref={viewportRef2}>
                                 <span
                                     ref={trackRef2}
                                     style={{
-                                        gap: '8px',
+                                        gap: 8,
                                         transform: `translateX(${x2}px)`,
                                         transition: 'transform 0.5s ease-in-out',
                                         display: 'inline-flex',
                                         minWidth: '100%',
                                     }}
                                 >
-                                    <div data-card1 style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card1 style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card1 style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card1 style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card1 style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card1 style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card1 style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card1 style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card1 style={{ flex: '0 0 auto' }}><CardComponent /></div>
-                                    <div data-card1 style={{ flex: '0 0 auto' }}><CardComponent /></div>
+                                    {internationalData?.map((product) => (
+                                        <div key={product._id} data-card1 style={{ flex: '0 0 auto' }}>
+                                            <CardComponent
+                                                {...product}
+                                                isInternational={true}
+                                            />
+                                        </div>
+                                    ))}
                                 </span>
                             </div>
 
-                            {/* Nút mới: mỗi lần trượt 1 card */}
                             <ArrowButtonComponent direction="right" onClick={nextCards2} ariaLabel="Xem tiếp" />
                             <ArrowButtonComponent direction="left" onClick={prevCards2} ariaLabel="Xem trước" />
                         </div>

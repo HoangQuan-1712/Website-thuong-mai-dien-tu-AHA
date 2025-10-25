@@ -72,13 +72,13 @@ const renderStars = (rating) => {
 
 const CardComponent = (props) => {
     const {
-        countInStock,
-        description,
+        //countInStock,
+        //description,
         image,
         name,
         price,
         rating,
-        type,
+        //type,
         discount,
         selled
     } = props;
@@ -103,7 +103,7 @@ const CardComponent = (props) => {
         <WrapperCardStyle
             hoverable
             headStyle={{ width: '100%', height: '290px' }}
-            style={{ width: '185px', height: '290px' }}
+            style={{ width: '185px', height: '315px' }}
             bodyStyle={{ padding: 10 }}
             cover={
                 <img
@@ -128,7 +128,7 @@ const CardComponent = (props) => {
 
                     {productSelled > 0 && (
                         <WrapperStyleTextSell>
-                            |Đã bán {formatSelled(productSelled)}
+                            | Đã bán {formatSelled(productSelled)}
                         </WrapperStyleTextSell>
                     )}
                 </div>

@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { routes } from './routes'
 import axios from 'axios'
 import DefaultComponents from './components/DefaultComponents/DefaultComponents';
@@ -7,16 +7,30 @@ import { useQuery } from '@tanstack/react-query';
 import { isJsonString } from './utils';
 import { jwtDecode } from "jwt-decode";
 import * as UserServices from './services/UserServices'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from './redux/slices/userSlide';
+import Loading from './components/LoadingComponent/Loading';
+
 
 function App() {
     const dispatch = useDispatch();
+    const [isLoading, setIsLoading] = useState(false)
+    const [authChecked, setAuthChecked] = useState(false);
+    const user = useSelector((state) => state.user)
+
     useEffect(() => {
+        setIsLoading(true)
         fetchApi()
         const { storageData, decoded } = handleDecoded()
         if (decoded?.id) {
             handleGetDetailsUser(decoded?.id, storageData)
+                .finally(() => {
+                    setIsLoading(false);
+                    setAuthChecked(true);
+                });
+        } else {
+            setIsLoading(false);
+            setAuthChecked(true);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -121,6 +135,7 @@ function App() {
         try {
             const res = await UserServices.getDetailsUser(id, token)
             dispatch(updateUser({ ...res?.data, access_token: token }))
+            setIsLoading(false)
         } catch (error) {
             console.error('Error getting user details:', error)
         }
@@ -140,25 +155,34 @@ function App() {
 
     return (
         <div>
-            <Router>
-                <Routes>
-                    {routes.map((route) => {
-                        const Page = route.page;
-                        const Layout = route.isShowHeader ? DefaultComponents : React.Fragment;
-                        return (
-                            <Route
-                                key={route.path}
-                                path={route.path}
-                                element={
-                                    <Layout>
-                                        <Page />
-                                    </Layout>
-                                }
-                            />
-                        );
-                    })}
-                </Routes>
-            </Router>
+            <Loading isLoading={isLoading}>
+                <Router>
+                    {authChecked ? (
+                        <Routes>
+                            {routes.map((route) => {
+                                const Page = route.page;
+                                const ischeckAuth = !route.isPrivate || user.isAdmin
+                                const Layout = route.isShowHeader ? DefaultComponents : React.Fragment;
+                                return (
+                                    <Route
+                                        key={route.path}
+                                        path={route.path}
+                                        element={
+                                            ischeckAuth ? (
+                                                <Layout>
+                                                    <Page />
+                                                </Layout>
+                                            ) : (
+                                                <Navigate to="/sign-in" replace state={{ from: route.path }} />
+                                            )
+                                        }
+                                    />
+                                );
+                            })}
+                        </Routes>
+                    ) : null}
+                </Router>
+            </Loading>
         </div>
     );
 }

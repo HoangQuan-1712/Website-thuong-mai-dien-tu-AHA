@@ -5,19 +5,20 @@ const routes = require("./routes");
 const cors = require('cors')
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser')
+const { startCronJobs } = require('./utils/cronJobs');
 
 dotenv.config()
 
 const app = express()
 const port = process.env.PORT || 3001
-    // CORS for credentialed requests from the frontend
+// CORS for credentialed requests from the frontend
 const allowedOrigins = [
     process.env.CLIENT_URL || 'http://localhost:3000',
     'http://127.0.0.1:3000'
 ]
 
 const corsOptions = {
-    origin: function(origin, callback) {
+    origin: function (origin, callback) {
         // Allow requests with no origin (like mobile apps, curl, Postman)
         if (!origin) return callback(null, true)
         if (allowedOrigins.includes(origin)) return callback(null, true)
@@ -44,13 +45,19 @@ routes(app);
 
 
 
-mongoose.connect(`${process.env.MONGO_DB}`)
+mongoose.connect(process.env.MONGO_DB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
     .then(() => {
-        console.log('Connect DB success')
+        console.log('✅ Connected to MongoDB');
+
+        // THÊM: Khởi động cron jobs SAU KHI kết nối DB thành công
+        startCronJobs();
     })
     .catch((err) => {
-        console.log(err)
-    })
+        console.error('❌ MongoDB connection error:', err);
+    });
 
 
 app.listen(port, () => {

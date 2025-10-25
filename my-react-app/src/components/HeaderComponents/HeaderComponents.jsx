@@ -25,6 +25,12 @@ const HeaderComponent = () => {
     const handlePage = () => {
         navigate('/');
     }
+    const handleAdmin = () => {
+        navigate('/system/admin');
+    }
+
+    const user = useSelector(state => state.user)
+    const displayName = user?.username || user?.name || user?.email || '';
 
     const handleLogout = async () => {
         setLoading(true);
@@ -41,12 +47,15 @@ const HeaderComponent = () => {
         <div>
             <WapperContentPopover onClick={handleLogout}>Đăng xuất</WapperContentPopover>
             <WapperContentPopover onClick={handleProfile}>Thông tin người dùng</WapperContentPopover>
+            {Boolean(user?.isAdmin) && (
+                <WapperContentPopover onClick={handleAdmin}>Quản lý hệ thống</WapperContentPopover>
+            )}
+
         </div>
     );
 
 
-    const user = useSelector(state => state.user)
-    const displayName = user?.username || user?.name || user?.email || '';
+
     return (
         <div>
             <WrapperHeader gutter={0} align="middle"  >

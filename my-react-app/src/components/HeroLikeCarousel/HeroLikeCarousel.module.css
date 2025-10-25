@@ -1,0 +1,155 @@
+/* src/components/HeroLikeCarousel/HeroLikeCarousel.module.css */
+
+.hero {
+    --peek: 9vw;
+    /* phần thò 2 bên (mobile) */
+    --peek-lg: 18rem;
+    /* phần thò 2 bên (desktop) */
+    --radius: 28px;
+    /* bo góc */
+    --shadow: 0 14px 40px rgba(0, 0, 0, .28);
+    --active-scale: 1.00;
+    /* slide giữa full size */
+    --side-scale: 0.82;
+    /* slide phụ nhỏ hơn rõ rệt */
+    width: 100%;
+    position: relative;
+    margin: 0 0 36px;
+    /* cách nội dung dưới */
+}
+
+.viewport {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding: 0 var(--peek);
+}
+
+@media (min-width:1024px) {
+    .viewport {
+        padding-left: var(--peek-lg);
+        padding-right: var(--peek-lg);
+    }
+}
+
+.track {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    /* khoảng cách giữa các banner */
+    will-change: transform;
+}
+
+.slide {
+    flex: 0 0 86%;
+    /* mobile: banner giữa chiếm phần lớn, vẫn hở 2 bên */
+    transform: scale(var(--side-scale));
+    transition: transform .42s ease, filter .42s ease, opacity .42s ease;
+    pointer-events: none;
+    /* tránh click vào slide phụ */
+    opacity: .85;
+    filter: saturate(.95);
+}
+
+.slide.active {
+    transform: scale(var(--active-scale));
+    pointer-events: auto;
+    opacity: 1;
+    filter: none;
+}
+
+/* tablet */
+@media (min-width:768px) {
+    .slide {
+        flex-basis: 76%;
+    }
+}
+
+/* desktop: trung tâm ~66% viewport (giống feel của Tiki) */
+@media (min-width:1280px) {
+    .slide {
+        flex-basis: 66%;
+    }
+}
+
+.card {
+    display: block;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #082a73;
+    /* nền khi ảnh load/contain */
+    box-shadow: var(--shadow);
+}
+
+.card img {
+    display: block;
+    width: 100%;
+    height: 420px;
+    object-fit: contain;
+    /* hiển thị TRỌN banner (không crop) */
+    background: #082a73;
+    /* viền nền đồng bộ */
+}
+
+@media (min-width:1024px) {
+    .card img {
+        height: 520px;
+    }
+}
+
+.nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .92);
+    color: #1a1a1a;
+    font-size: 28px;
+    line-height: 44px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .25);
+}
+
+.prev {
+    left: 14px;
+}
+
+.next {
+    right: 14px;
+}
+
+.nav:hover {
+    background: #fff;
+}
+
+.dots {
+    margin: 18px auto 0;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, .18);
+    padding: 8px 14px;
+    border-radius: 999px;
+    width: fit-content;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .6);
+    border: none;
+    cursor: pointer;
+}
+
+.dotActive {
+    width: 64px;
+    background: #fff;
+    transition: width .3s ease;
+}

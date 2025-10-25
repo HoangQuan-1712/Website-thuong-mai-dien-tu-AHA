@@ -11,11 +11,15 @@ import PassForPhoneNumber from '../pages/SignUpPage/PassForPhoneNumber';
 import ForgotPassword from '../pages/SignUpPage/ForgotPassword';
 import Register from '../pages/SignUpPage/Register';
 import ProfilePage from '../pages/Profile/ProfilePage';
+import AdminPage from '../pages/AdminPage/AdminPage';
+import FlashSalePage from '../pages/FlashSalePage/FlashSalePage';
+import InternationalPage from '../pages/InternationalPage/InternationalPage';
 
 export const routes = [{
     path: '/',
     page: HomePage,
-    isShowHeader: true
+    isShowHeader: true,
+
 },
 {
     path: '/order',
@@ -33,13 +37,14 @@ export const routes = [{
     path: '/type',
     page: TypeProductPage,
     isShowHeader: true,
-    isShowFooter: true
+    isShowFooter: false
 },
 {
     path: '/sign-in',
     page: SignInPage,
     isShowHeader: false,
     isShowFooter: false
+
 },
 {
     path: '/sign-up',
@@ -83,6 +88,28 @@ export const routes = [{
     isShowHeader: true,
     isShowFooter: true
 },
+
+{
+    path: '/system/admin',
+    page: AdminPage,
+    isShowHeader: true,
+    isShowFooter: false,
+    isPrivate: true
+},
+{
+    path: '/flash-sale',
+    page: FlashSalePage,
+    isShowHeader: true,
+    isShowFooter: true
+},
+{
+    path: '/international',
+    page: InternationalPage,
+    isShowHeader: true,
+    isShowFooter: true
+},
+
+
 {
     path: '/*',
     page: NotFoundPage

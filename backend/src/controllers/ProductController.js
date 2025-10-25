@@ -3,13 +3,19 @@ const ProductServices = require('../services/ProductServices')
 
 const createProduct = async (req, res) => {
     try {
-        const { name, image, type, price, countInStock, rating, description, selled, discount, discounts } = req.body
+        const { name, image, type, price, countInStock, rating, description, selled, discount, origin } = req.body
         console.log('req.body', req.body);
 
         if (!name || !image || !type || !price || !countInStock) {
             return res.status(200).json({
                 status: 'ERR',
                 message: 'The input is required'
+            })
+        }
+        if (origin && !['domestic', 'international'].includes(origin)) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'origin must be "domestic" or "international"'
             })
         }
         const response = await ProductServices.createProduct(req.body)
@@ -130,10 +136,51 @@ const getAllProduct = async (req, res) => {
     }
 }
 
+const getFlashSale = async (req, res) => {
+    try {
+        const { limit } = req.query;
+        const response = await ProductServices.getFlashSaleProducts(Number(limit) || 20);
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(500).json({
+            status: 'ERR',
+            message: e.message
+        });
+    }
+};
+
+const getInternational = async (req, res) => {
+    try {
+        const { limit } = req.query;
+        const response = await ProductServices.getInternationalProducts(Number(limit) || 20);
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(500).json({
+            status: 'ERR',
+            message: e.message
+        });
+    }
+};
+
+const forceUpdateFlashSale = async (req, res) => {
+    try {
+        const result = await ProductServices.updateFlashSaleProducts();
+        return res.status(200).json(result);
+    } catch (e) {
+        return res.status(500).json({
+            status: 'ERR',
+            message: e.message
+        });
+    }
+};
+
 module.exports = {
     createProduct,
     updateProduct,
     getDetailsProduct,
     deleteProduct,
     getAllProduct,
+    getFlashSale,
+    getInternational,
+    forceUpdateFlashSale
 }
