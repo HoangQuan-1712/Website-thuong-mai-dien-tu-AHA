@@ -85,3 +85,69 @@ export const logoutUser = async () => {
     );
     return res.data;
 }
+
+export const getAllUser = async (limit = 100, page = 0, access_token) => {
+    try {
+        const res = await axiosJWT.get(
+            buildUrl(`user/getAll?limit=${limit}&page=${page}`),
+            {
+                headers: {
+                    token: `Bearer ${access_token}`,
+                }
+            }
+        );
+        return res.data;
+    } catch (error) {
+        console.error('getAllUser error:', error);
+        throw error;
+    }
+};
+
+export const deleteUser = async (id, access_token) => {
+    try {
+        const res = await axiosJWT.delete(
+            buildUrl(`user/delete-user/${id}`),
+            {
+                headers: {
+                    token: `Bearer ${access_token}`,
+                }
+            }
+        );
+        return res.data;
+    } catch (error) {
+        console.error('deleteUser error:', error);
+        throw error;
+    }
+};
+
+export const updateUser = async (id, data, access_token) => {
+    try {
+        const res = await axiosJWT.put(
+            buildUrl(`user/update-user/${id}`),
+            data,
+            {
+                headers: {
+                    token: `Bearer ${access_token}`,
+                }
+            }
+        );
+        return res.data;
+    } catch (error) {
+        console.error('updateUser error:', error);
+        throw error;
+    }
+};
+
+export const createUser = async (data) => {
+    try {
+        const res = await axios.post(
+            buildUrl("user/sign-up"),
+            data,
+            { withCredentials: true }
+        );
+        return res.data;
+    } catch (error) {
+        console.error('createUser error:', error);
+        throw error;
+    }
+};

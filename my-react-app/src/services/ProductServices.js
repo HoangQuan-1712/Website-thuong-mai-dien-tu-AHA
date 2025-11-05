@@ -11,7 +11,7 @@ export const getAllProduct = async (limit = 100, page = 0, sort, filter) => {
         if (filter) params.append('filter', filter);
 
         const res = await axios.get(
-            buildUrl(`product/getAll?${params.toString()}`)  // ✅ FIX
+            buildUrl(`product/getAll?${params.toString()}`)
         );
         console.log('API getAllProduct response:', res);
         return res.data;

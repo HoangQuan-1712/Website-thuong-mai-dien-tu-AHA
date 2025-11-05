@@ -2,7 +2,8 @@ import { Menu } from "antd";
 import React, { useState } from "react";
 import { getItem } from "../../utils";
 import { ProductOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons";
-import AdminUser from "../../components/AdminUser/ListUser";
+import ListUser from "../../components/AdminUser/ListUser";
+import ListAdmin from "../../components/AdminUser/ListAdmin";
 import AdminProduct from "../../components/AdminProduct/AdminProduct";
 
 const AdminPage = () => {
@@ -31,7 +32,11 @@ const AdminPage = () => {
         switch (key) {
             case '1':
                 return (
-                    <AdminUser />
+                    <ListUser />
+                )
+            case '2':
+                return (
+                    <ListAdmin />
                 )
             case '3':
                 return (

@@ -4,7 +4,7 @@ import InputForm from "../../components/InputForm/InputForm"
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent"
 import imageLogo from "../../assets/images/logo-login.webp"
 import CloseLogo from "../../assets/images/close.png"
-import { Image } from "antd"
+import { Image, message } from "antd"
 import { LeftOutlined } from '@ant-design/icons'
 import { useNavigate } from "react-router-dom";
 //import { useMutation} from '@tanstack/react-query'
@@ -46,8 +46,19 @@ const SignInPage = () => {
             }
 
         }
+        if (isSuccess && data?.status === 'ERR') {
+            if (data?.message?.includes('khóa') || data?.message?.includes('locked')) {
+                message.error('Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.');
+            } else if (data?.message?.includes('password') || data?.message?.includes('incorrect')) {
+                message.error('Email hoặc mật khẩu không đúng!');
+            } else if (data?.message?.includes('not defined')) {
+                message.error('Tài khoản không tồn tại!');
+            } else {
+                message.error(data?.message || 'Đăng nhập thất bại!');
+            }
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSuccess])
+    }, [isSuccess, data])
 
 
     const handleGetDetailsUser = async (id, token) => {
