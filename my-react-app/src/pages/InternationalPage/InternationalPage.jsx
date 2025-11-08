@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import * as ProductServices from '../../services/ProductServices'
 import CardComponent from '../../components/CardComponent/CardComponent'
 import FooterComponent from '../../components/FooterComponent/FooterComponent'
-import ChatComponent from '../../components/ChatComponent/ChatComponent'
+import ChatComponent from '../../components/ChatWidget/ChatWidget'
 
 const InternationalPage = () => {
     const { isLoading, data: internationalData, error } = useQuery({

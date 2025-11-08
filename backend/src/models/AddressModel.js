@@ -1,4 +1,3 @@
-// models/AddressModel.js
 const mongoose = require('mongoose');
 
 const addressSchema = new mongoose.Schema(

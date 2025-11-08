@@ -38,8 +38,6 @@ import image12 from "../../assets/images/image12.webp"
 import image13 from "../../assets/images/image13.webp"
 import image14 from "../../assets/images/image14.webp"
 import ImageComponent from '../../components/ImageComponent/ImageComponent';
-import FooterComponent from '../../components/FooterComponent/FooterComponent'
-import ChatComponent from '../../components/ChatComponent/ChatComponent'
 import { useQuery } from '@tanstack/react-query'
 import * as ProductServices from '../../services/ProductServices'
 
@@ -582,8 +580,6 @@ const HomePage = () => {
                 </div>
 
             </div >
-            <FooterComponent />
-            <ChatComponent />
         </>
     );
 };

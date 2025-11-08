@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const User = require('../models/UserModel');
 dotenv.config();
 
-const authMiddleware = async (req, res, next) => {
+const authMiddleware = async(req, res, next) => {
     // Lấy token từ header 'token' hoặc 'authorization'
     let token = req.headers.token || req.headers.authorization;
 
@@ -21,14 +21,14 @@ const authMiddleware = async (req, res, next) => {
     }
 
     // Xác thực token
-    jwt.verify(token, process.env.ACCESS_TOKEN, async (err, user) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN, async(err, user) => {
         if (err) {
             return res.status(401).json({
                 message: 'The authentication failed',
                 status: 'ERROR'
             });
         }
-
+        req.user = user;
         try {
             const userDoc = await User.findById(user.id);
             if (userDoc && userDoc.isLocked && !userDoc.isAdmin) {
@@ -56,7 +56,7 @@ const authMiddleware = async (req, res, next) => {
     });
 };
 
-const authUserMiddleware = async (req, res, next) => {
+const authUserMiddleware = async(req, res, next) => {
     // Lấy token từ header 'token' hoặc 'authorization'
     let token = req.headers.token || req.headers.authorization;
 
@@ -74,14 +74,14 @@ const authUserMiddleware = async (req, res, next) => {
     }
 
     // Xác thực token
-    jwt.verify(token, process.env.ACCESS_TOKEN, async (err, user) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN, async(err, user) => {
         if (err) {
             return res.status(401).json({
                 message: 'The authentication failed',
                 status: 'ERROR'
             });
         }
-
+        req.user = user;
         try {
             const userDoc = await User.findById(user.id);
             if (userDoc && userDoc.isLocked && !userDoc.isAdmin) {

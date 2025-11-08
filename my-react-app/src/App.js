@@ -12,6 +12,7 @@ import { updateUser } from './redux/slices/userSlide';
 import Loading from './components/LoadingComponent/Loading';
 
 
+
 function App() {
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false)
@@ -157,6 +158,7 @@ function App() {
         <div>
             <Loading isLoading={isLoading}>
                 <Router>
+
                     {authChecked ? (
                         <Routes>
                             {routes.map((route) => {

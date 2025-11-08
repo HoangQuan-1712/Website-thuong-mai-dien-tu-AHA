@@ -1,12 +1,5 @@
-// cronJobs.js - Tạo file mới trong thư mục root hoặc /utils
 const cron = require('node-cron');
 const ProductServices = require('../services/ProductServices');
-
-// ============================================
-// CRON JOB: CẬP NHẬT FLASH SALE MỖI NGÀY
-// ============================================
-
-// Chạy lúc 00:00 mỗi ngày
 const flashSaleCronJob = cron.schedule('0 0 * * *', async () => {
     console.log('⏰ [CRON] Running daily Flash Sale update at:', new Date().toLocaleString('vi-VN'));
 
@@ -21,9 +14,6 @@ const flashSaleCronJob = cron.schedule('0 0 * * *', async () => {
     timezone: "Asia/Ho_Chi_Minh"
 });
 
-// ============================================
-// CRON JOB: KIỂM TRA VÀ RESET FLASH SALE HẾT HẠN (Chạy mỗi giờ)
-// ============================================
 
 const checkExpiredFlashSale = cron.schedule('0 * * * *', async () => {
     console.log('⏰ [CRON] Checking expired Flash Sale at:', new Date().toLocaleString('vi-VN'));
@@ -57,10 +47,6 @@ const checkExpiredFlashSale = cron.schedule('0 * * * *', async () => {
     timezone: "Asia/Ho_Chi_Minh"
 });
 
-// ============================================
-// START CRON JOBS
-// ============================================
-
 const startCronJobs = () => {
     console.log('🚀 Starting cron jobs...');
 
@@ -70,7 +56,6 @@ const startCronJobs = () => {
     checkExpiredFlashSale.start();
     console.log('✅ Flash Sale expiry check cron job started (runs hourly)');
 
-    // Chạy update Flash Sale ngay lần đầu khi start server
     console.log('🔄 Running initial Flash Sale update...');
     ProductServices.updateFlashSaleProducts()
         .then(result => console.log('✅ Initial Flash Sale update completed:', result))
